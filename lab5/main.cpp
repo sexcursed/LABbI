@@ -10,7 +10,7 @@ int main(){
     
     int choice;
     std::vector <std::string> Input;
-    std::cout << "Выберете тип ввода(1-3): ";
+    std::cout << "Выберете тип ввода(1 - ручной, 2 - случайный, 3 - из файла): ";
     std::cin >> choice;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
