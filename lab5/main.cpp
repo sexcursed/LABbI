@@ -34,7 +34,7 @@ int main(){
         std::cout << x << " ";
     }
 
-    std::cout << "\nВыберете задачу(1-7): ";
+    std::cout << "\nВыберете задачу\nString43 - 1\nStr15 - 2\nStr24 - 3\nStr39 - 4\nStr28 - 5\ntask6 - 6\nFive3 - 7\n";
     std::cin >> choice;
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
