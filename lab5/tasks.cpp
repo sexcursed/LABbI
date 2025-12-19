@@ -12,7 +12,7 @@ void String43(std::vector <std::string> words){
         
     }
 
-    std::cout << "\n" << count;
+    std::cout << "\n count = " << count;
 
 }
 
@@ -33,7 +33,7 @@ void Str15(std::vector <std::string> words){
 
 void Str24(std::vector <std::string> words){
     
-    int gammaByte,charByte;
+    int gammaByte,charByte, c;
     //srand(time(0));
     std::cout << "Введите желаемую гамму (127-255): ";
     std::cin >> gammaByte;
@@ -41,19 +41,34 @@ void Str24(std::vector <std::string> words){
         std::cout << "Введите корректное значение от 127 до 255: ";
         std::cin >> gammaByte;
     }
+    std::cout << "Шифровка/дешифровка (1/2): ";
+    std::cin >> c;
+    while(c != 1 and c != 2){
+        std::cout << "Введите корректное значение 1/2";
+        std::cin >> c;
+    }
     
     for(std::string word : words){
         std::cout << word << " ";
     }
     std::cout << "= ";
-    for(std::string word : words){
-        for(char c : word){
-            charByte = (int)c ^ gammaByte;
-            std::cout << (char)charByte;
+    if(c == 2){
+        for(std::string word : words){
+            int num = std::stoi(word);
+            charByte = num ^ gammaByte;
+            std::cout << static_cast<char>(charByte) << " ";
         }
-        std::cout << " ";
     }
-    std::cout << "XOR код";
+    else{
+        for(std::string word : words){
+            for(char c : word){
+                charByte = c ^ gammaByte;
+                std::cout << static_cast<int>(charByte) << " ";
+            }
+            std::cout << " ";
+        }
+        std::cout << "XOR код";
+    }
 }
 
 void Str39(std::vector <std::string> words){
@@ -157,6 +172,7 @@ void task6(std::vector <std::string> words){
         trans = "";
         for(char ch : word){
             trans += alph[ch];
+            trans += " ";
         }
         result.push_back(trans);
     }
@@ -191,6 +207,9 @@ void Five3(){
             if(operand == '+') result = a + b;
             if(operand == '-') result = a - b;
             out << expression << " " << result << "\n";
+        }
+        else{
+            out << "некорректное выражение\n";
         }
     }
     out.close();
