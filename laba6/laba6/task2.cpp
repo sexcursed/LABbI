@@ -6,28 +6,28 @@ Shape inShape(){
   std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
   int typeChoice;
-  std::cout << "Введите тип фигуры\n1 - круг\n2 - квадрат\n3 - отрезок\n";
+  std::cout << "Р’С‹Р±РµСЂРµС‚Рµ С‚РёРї С„РёРіСѓСЂС‹\n1 - РєСЂСѓРі\n2 - РєРІР°РґСЂР°С‚\n3 - РѕС‚СЂРµР·РѕРє\n";
   std::cin >> typeChoice;
   
-  std::cout << "Введите цвет фигуры: ";
+  std::cout << "Р’РІРµРґРёС‚Рµ С†РІРµС‚ С„РёРіСѓСЂС‹\n";
   std::cin >> newShape.color;
 
   switch(typeChoice){
     case 1:{
       newShape.type = CIRCLE;
-      std::cout << "Введите радиус круга\n";
+      std::cout << "Р’РІРµРґРёС‚Рµ СЂР°РґРёСѓСЃ РєСЂСѓРіР°\n";
       std::cin >> newShape.parametr.radius;
       break;
     }
     case 2:{
       newShape.type = SQUARE;
-      std::cout << "Введите длину стороны квадрата\n";
+      std::cout << "Р’РІРµРґРёС‚Рµ РґР»РёРЅСѓ СЃС‚РѕСЂРѕРЅС‹ РєРІР°РґСЂР°С‚Р°\n";
       std::cin >> newShape.parametr.side;
       break;
     }
     case 3:{
       newShape.type = SEGMENT;
-      std::cout << "Введите длину отрезка\n";
+      std::cout << "Р’РІРµРґРёС‚Рµ РґР»РёРЅСѓ РѕС‚СЂРµР·РєР°\n";
       std::cin >> newShape.parametr.length;
       break;
     }
@@ -52,9 +52,9 @@ std::vector <Shape> inShapesList(int N){
 
 std::string getShapeType(Shape shape){
   switch(shape.type){
-    case CIRCLE: return "Круг";
-    case SQUARE: return "Квадрат";
-    case SEGMENT: return "Отрезок";
+    case CIRCLE: return "РљСЂСѓРі";
+    case SQUARE: return "РљРІР°РґСЂР°С‚";
+    case SEGMENT: return "РћС‚СЂРµР·РѕРє";
     default: return "Not Found";
   }
 }
@@ -72,7 +72,7 @@ void fileFill(std::vector <Shape>& shapesList){
   std::ofstream file("out.txt");
   if(!file.is_open()) return;
 
-  file << std::left << std::setw(15) << "Тип" << std::setw(15) << "Цвет" << std::setw(15) << "Параметр" << std::endl;
+  file << std::left << std::setw(15) << "РўРёРї" << std::setw(15) << "Р¦РІРµС‚" << std::setw(15) << "РџР°СЂР°РјРµС‚СЂ" << std::endl;
   for(Shape shape : shapesList){
     file << std::left << std::setw(15) << getShapeType(shape) << std::setw(15) << shape.color << std::setw(15) << getShapeParameter(shape) << std::endl;
   }

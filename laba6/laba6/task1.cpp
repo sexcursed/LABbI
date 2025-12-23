@@ -40,6 +40,7 @@ bool comparator(client& a, client& b){
 void answer1(int N){
     std::vector <client> clients = generate(N);
     std::sort(clients.begin(),clients.end(),comparator);
-    //outClients(clients);
+    outClients(clients);
+    std::cout << "Строка данных с мин. длительностью занятий и самой ранней датой:\n";
     outClient(clients[0]);
 }

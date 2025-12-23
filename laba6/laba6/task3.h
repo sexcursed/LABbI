@@ -8,3 +8,5 @@ struct Point{
   float y;
 };
 
+void answer3(std::vector <Point>& polygon);
+std::vector <Point> inputPolygon();
