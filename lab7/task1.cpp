@@ -7,7 +7,7 @@ int inputSize(){
   return N;
 }
 
-std::vector <int> generate(){
+std::vector <int> generateNums(){
   srand(time(0));
   int N = inputSize();
   std::vector <int> nums;
@@ -37,6 +37,6 @@ void bubbleSort(std::vector <int>& nums){
 }
 
 void answer1(){
-  std::vector <int> m = generate();
+  std::vector <int> m = generateNums();
   bubbleSort(m);
 }
