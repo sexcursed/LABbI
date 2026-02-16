@@ -3,8 +3,9 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
+#include <ctime>
+#include <cstdlib>
 
-int element(std::string s);
-int term(std::string s);
 int calc(std::string s);
 void file8();
+void file31();
