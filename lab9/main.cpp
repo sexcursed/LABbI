@@ -2,7 +2,7 @@
 
 int main(){
     int choice;
-    std::cout << "Выберете задачу: ";
+    std::cout << "Выберете задачу(1-4): ";
     std::cin >> choice;
     switch (choice)
     {
