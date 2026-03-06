@@ -1,4 +1,4 @@
-#include "linked_list.h"
+#include "classes.h"
 #include <ctime>
 #include <cstdlib>
 #include <fstream>
@@ -136,20 +136,13 @@ void LinkedList::clear() {
     std::cout << "Список очищен\n";
 }
 
-void LinkedList::fill_manual() {
-    std::cout << "Введите числа (пустая строка - завершить ввод):\n";
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    while (true) {
-        std::cout << "Ввод: ";
-        std::string input;
-        std::getline(std::cin, input);
-
-        if (input.empty()) {
-            break;
-        }
-        push_back(input);
+void LinkedList::fill_manual(int N) {
+    for(int i = 0; i < N; ++i){
+        std::string x;
+        std::cout << "Введите элемент #" << (i + 1) << ": ";
+        std::cin >> x;
+        push_back(x);
     }
-    std::cout << "Ввод закончен\n";
 }
 
 void LinkedList::fill_random(int N) {
@@ -305,5 +298,135 @@ void LinkedList::ListWork3() {
         std::cout << "Найден 4-й элемент: " << current->value << "\n" << "Указатель на него: " << current << "\n";
     } else {
         std::cout << "В списке меньше 4 элементов\n";
+    }
+}
+
+Stack::Stack() : head(nullptr), count(0) {
+    std::cout << "Стек создан\n";
+}
+Stack::~Stack() {
+    std::cout << "Стек удален\n";
+}
+
+void Stack::push(const std::string& value) {
+    auto newNode = std::make_unique<Node>(value);
+    newNode->next = std::move(head);
+    head = std::move(newNode);
+    count++;
+    std::cout << "Элемент добавлен в стек\n";
+}
+
+std::string Stack::pop() {
+    if (is_empty()) {
+        std::cout << "Стек пуст\n";
+        return "";
+    }
+    
+    std::string value = head->value;
+    head = std::move(head->next);
+    count--;
+    
+    return value;
+}
+
+void Stack::clear() {
+    while (!is_empty()) {
+        head = std::move(head->next);
+    }
+    count = 0;
+    std::cout << "Стек очищен\n";
+}
+
+std::string Stack::top() const {
+    if (is_empty()) {
+        std::cout << "Стек пуст\n";
+        return "";
+    }
+    return head->value;
+}
+
+int Stack::size() const {
+    return count;
+}
+
+bool Stack::is_empty() const {
+    return head == nullptr;
+}
+
+void Stack::print() const {
+    if (is_empty()) {
+        std::cout << "Стек пуст\n";
+        return;
+    }
+    
+    std::cout << "Стек: ";
+    Node* current = head.get();
+    while (current != nullptr) {
+        std::cout << current->value << " ";
+        current = current->next.get();
+    }
+    std::cout << "\n";
+}
+
+void Stack::fill_manual(int N) {
+    for (int i = 0; i < N; ++i) {
+        std::string x;
+        std::cout << "Введите элемент #" << (i + 1) << ": ";
+        std::cin >> x;
+        push(x);
+    }
+}
+
+void Stack::fill_random(int N) {
+    static bool seeded = false;
+    if (!seeded) {
+        srand(time(nullptr));
+        seeded = true;
+    }
+    
+    for (int i = 0; i < N; ++i) {
+        int num = rand() % 1000 + 1;
+        push(std::to_string(num));
+    }
+    std::cout << "Стек заполнен случайными числами\n";
+}
+
+void Stack::fill_from_file(const std::string& filename) {
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Не удалось открыть файл\n";
+        return;
+    }
+    
+    std::string x;
+    while (file >> x) {
+        push(x);
+    }
+    file.close();
+    std::cout << "Файл успешно обработан\n";
+}
+
+void Stack::Dynamic5() {
+    if (is_empty()) {
+        std::cout << "P2 = nullptr\n";
+        return;
+    }
+    
+    std::string D = pop();
+    
+    Node* P2 = nullptr;
+    if (!is_empty()) {
+        P2 = head.get();
+    }
+    
+    std::cout << "D = " << D << "\n";
+    if (P2 != nullptr) {
+    std::cout << "P2 = указывает на вершину стека\n";
+    }
+    else {
+    std::cout << "P2 = nullptr\n";
+    }
+    if (P2) {
+        std::cout << "Значение по адресу P2: " << P2->value << "\n";
     }
 }

@@ -1,5 +1,4 @@
-#include "linked_list.h"
-#include "stack.h"
+#include "classes.h"
 #include <windows.h>
 
 void setConsoleUTF8(){
@@ -21,7 +20,10 @@ int main(){
       switch (fill_type)
       {
         case 1:{
-          stack.fill_manual(10);
+          int N;
+          std::cout << "Введите кол-во чисел:";
+          std::cin >> N;
+          stack.fill_manual(N);
           break;
         }
         case 2:{
@@ -51,7 +53,10 @@ int main(){
       switch (fill_type)
       {
         case 1:{
-          list.fill_manual();
+          int N;
+          std::cout << "Введите кол-во чисел:";
+          std::cin >> N;
+          list.fill_manual(N);
           break;
         }
         case 2:{
@@ -84,7 +89,10 @@ int main(){
       switch (fill_type)
       {
         case 1:{
-          list.fill_manual();
+          int N;
+          std::cout << "Введите кол-во чисел:";
+          std::cin >> N;
+          list.fill_manual(N);
           break;
         }
         case 2:{
