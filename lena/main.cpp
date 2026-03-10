@@ -79,11 +79,7 @@ int main(){
           break;
         }
       }
-      list.print();
-      TList tlist(list);
-      tlist.print_addresses();
-      tlist.list_work45();
-      list.print();
+      list.list_work43();
       break;
     }
     case 4:{
@@ -115,11 +111,7 @@ int main(){
           break;
         }
       }
-      list.set_circular(true);
-      list.print();
-      TList tlist(list);
-      tlist.list_work46();
-      list.print_with_barrier();
+      list.list_work46();
       break;
     }
     case 5:{}

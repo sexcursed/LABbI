@@ -413,45 +413,88 @@ void CircularList::list_work42() {
     }
 }
 
-void TList::list_work46() {
 
-    if (First == nullptr || First->next.get() == nullptr || First->next.get() == First) {
-        std::cout << "Список пуст\n";
-        return;
+void CircularList::list_work43() {
+    if (!head || !head->next) return;
+    print();
+
+    std::unique_ptr<Node> odd_h = nullptr;
+    Node* odd_t = nullptr;
+    std::unique_ptr<Node> even_h = nullptr;
+    Node* even_t = nullptr;
+
+    Node* curr = head.release();
+    int pos = 1;
+
+    while (curr) {
+        Node* next_raw = curr->next.release();
+        curr->prev = nullptr;
+        curr->next = nullptr;
+
+        if (pos % 2 != 0) {
+            if (!odd_h) {
+                odd_h = std::unique_ptr<Node>(curr);
+                odd_t = curr;
+            } else {
+                curr->prev = odd_t;
+                odd_t->next = std::unique_ptr<Node>(curr);
+                odd_t = curr;
+            }
+        } else {
+            if (!even_h) {
+                even_h = std::unique_ptr<Node>(curr);
+                even_t = curr;
+            } else {
+                curr->prev = even_t;
+                even_t->next = std::unique_ptr<Node>(curr);
+                even_t = curr;
+            }
+        }
+        curr = next_raw;
+        pos++;
     }
 
-
-    Current = First->next.get(); 
-    std::cout << "Текущим стал первый элемент после барьера: " << Current->value << "\n";
-
-    int count = 0; 
-    int index = 1; 
-
-    while (Current != First) {
-        count++;
-
-        if (index % 2 != 0) {
-            std::string old_val = Current->value;
-            Current->value = "0";
-            std::cout << "Элемент #" << index << " обнулен (был: " << old_val << ")\n";
+    if (even_h) {
+        head = std::move(even_h);
+        tail = even_t;
+        if (odd_h) {
+            odd_h->prev = tail;
+            tail->next = std::move(odd_h);
+            tail = odd_t;
         }
-
-        Node* next_node = Current->next.get();
-        
-        if (next_node == nullptr) {
-            break;
-        }
-
-        Current = next_node;
-        index++;
-
+    } else {
+        head = std::move(odd_h);
+        tail = odd_t;
     }
 
-    std::cout << "Количество элементов в списке: " << count << "\n";
-    
-    Current = First; 
-    std::cout << "Текущим элементом стал барьер. Адрес (Current): " << Current << "\n";
-};
+    std::cout << "P1 (новое начало): " << head.get() << std::endl;
+    print();
+}
+
+void CircularList::list_work46() {
+    print();
+
+    auto barrier = std::make_unique<Node>("0");
+    Node* barrier_ptr = barrier.get();
+
+    if (!head) {
+        barrier_ptr->next = nullptr;
+        barrier_ptr->prev = barrier_ptr;
+    } else {
+        barrier_ptr->next = std::move(head);
+        barrier_ptr->next->prev = barrier_ptr;
+
+        barrier_ptr->prev = tail;
+        tail->next = nullptr;
+    }
+
+    head = std::move(barrier);
+    tail = barrier_ptr;
+    circular = true;
+
+    std::cout << "Указатель на барьерный элемент: " << head.get() << std::endl;
+    print_with_barrier();
+}
 
 void CircularList::print_with_barrier() const {
     if (!head) {
@@ -480,4 +523,4 @@ void CircularList::print_with_barrier() const {
     }
 
     std::cout << " -> Барьер(" << barrier->value << ")\n";
-};
+}

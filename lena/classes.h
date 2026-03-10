@@ -51,34 +51,7 @@ public:
     void fill_from_file(const std::string& filename);
 
     void list_work42();
-
-    Node* get_head() const { return head.get(); }
-    Node* get_tail() const { return tail; }
-    void print_with_barrier() const;
-};
-
-class TList {
-  private:
-    Node* First;
-    Node* Last;
-    Node* Current;
-    CircularList* list;
-  public:
-    TList(CircularList& l);
-    ~TList();
-
-    void to_first();
-    void to_next();
-    void set_data(int D);
-    bool is_last() const;
-    void insert_last(int D);
-    void list_work45();
-
-    Node* get_first() const { return First; }
-    Node* get_last() const { return Last; }
-    Node* get_current() const { return Current; }
-
-    void print_addresses() const;
-    int get_size() const;
+    void list_work43();
     void list_work46();
+    void print_with_barrier() const;
 };
