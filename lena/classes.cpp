@@ -12,7 +12,7 @@ Node::~Node() {
 }
 
 CircularList::CircularList() : head(nullptr), tail(nullptr), count(0), circular(false) {
-    std::cout << "Создан двусвязный список (режим: " << (circular ? "циклический" : "обычный") << ")\n";
+    std::cout << "Создан двусвязный список\n";
 }
 
 CircularList::~CircularList() {
@@ -83,7 +83,7 @@ void CircularList::push_front(const std::string& val) {
         make_circular_connections();
     }
     
-    std::cout << "Элемент " << val << " добавлен в начало\n";
+    //std::cout << "Элемент " << val << " добавлен в начало\n";
 }
 
 void CircularList::push_back(const std::string& val) {
@@ -104,7 +104,7 @@ void CircularList::push_back(const std::string& val) {
         make_circular_connections();
     }
     
-    std::cout << "Элемент " << val << " добавлен в конец\n";
+    //std::cout << "Элемент " << val << " добавлен в конец\n";
 }
 
 void CircularList::insert_after(const std::string& target, const std::string& val) {
@@ -138,7 +138,7 @@ void CircularList::insert_after(const std::string& target, const std::string& va
         make_circular_connections();
     }
     
-    std::cout << "Элемент " << val << " вставлен после " << target << "\n";
+    //std::cout << "Элемент " << val << " вставлен после " << target << "\n";
 }
 
 void CircularList::insert_before(const std::string& target, const std::string& val) {
@@ -171,7 +171,7 @@ void CircularList::insert_before(const std::string& target, const std::string& v
         make_circular_connections();
     }
     
-    std::cout << "Элемент " << val << " вставлен перед " << target << "\n";
+    //std::cout << "Элемент " << val << " вставлен перед " << target << "\n";
 }
 
 void CircularList::remove_first() {
@@ -194,7 +194,7 @@ void CircularList::remove_first() {
     }
     count--;
     
-    std::cout << "Удален первый элемент: " << removed_value << "\n";
+    //std::cout << "Удален первый элемент: " << removed_value << "\n";
 }
 
 void CircularList::remove_last() {
@@ -219,7 +219,7 @@ void CircularList::remove_last() {
     }
     count--;
     
-    std::cout << "Удален последний элемент: " << removed_value << "\n";
+    //std::cout << "Удален последний элемент: " << removed_value << "\n";
 }
 
 void CircularList::remove_by_value(const std::string& val) {
@@ -249,7 +249,7 @@ void CircularList::remove_by_value(const std::string& val) {
             current->next->prev = current->prev;
         }
         count--;
-        std::cout << "Удален элемент: " << val << "\n";
+        //std::cout << "Удален элемент: " << val << "\n";
     } else {
         std::cout << "Элемент " << val << " не найден\n";
     }
@@ -296,7 +296,7 @@ void CircularList::clear() {
     
     head.reset();
     tail = nullptr;
-    std::cout << "Список очищен\n";
+    //std::cout << "Список очищен\n";
 }
 
 void CircularList::print() const {
@@ -338,10 +338,10 @@ void CircularList::fill_random(int N) {
     }
     
     for (int i = 0; i < N; ++i) {
-        int num = rand() % 1000 + 1;
+        int num = -1000 + rand() % 2001;
         push_back(std::to_string(num));
     }
-    std::cout << "Список заполнен " << N << " случайными числами\n";
+    //std::cout << "Список заполнен " << N << " случайными числами\n";
 }
 
 void CircularList::fill_from_file(const std::string& filename) {
@@ -358,7 +358,7 @@ void CircularList::fill_from_file(const std::string& filename) {
         }
     }
     file.close();
-    std::cout << "Файл успешно считан в список\n";
+    //std::cout << "Файл успешно считан в список\n";
 }
 
 void CircularList::list_work42() {
@@ -407,7 +407,7 @@ void CircularList::list_work42() {
     if (count >= 3) {
         list_work42();
     } else {
-        std::cout << "Финальный результат:\n";
+        std::cout << "Результат:\n";
         print();
         std::cout << "Удалено элементов: " << (original_count - count) << "\n";
     }
@@ -415,7 +415,7 @@ void CircularList::list_work42() {
 
 
 void CircularList::list_work43() {
-    if (!head || !head->next) return;
+    if (is_empty()) return;
     print();
 
     std::unique_ptr<Node> odd_h = nullptr;
@@ -497,8 +497,8 @@ void CircularList::list_work46() {
 }
 
 void CircularList::print_with_barrier() const {
-    if (!head) {
-        std::cout << "Список не инициализирован\n";
+    if (is_empty()) {
+        std::cout << "Список пуст\n";
         return;
     }
 
@@ -523,4 +523,80 @@ void CircularList::print_with_barrier() const {
     }
 
     std::cout << " -> Барьер(" << barrier->value << ")\n";
+}
+
+void CircularList::list_work68(std::string filename){
+    std::ofstream output(filename);
+    Node* prev = tail;
+    Node* current = head.get();
+
+    while(count > 0){
+        output << current->value << "\n";
+
+        std::unique_ptr<Node> to_delete;
+        if(count == 1){
+            head.reset();
+        }
+        else if(current == head.get()){
+            to_delete = std::move(head);
+            head = std::move(to_delete->next);
+            current = head.get();
+        }
+        else{
+            to_delete = std::move(prev->next);
+            prev->next = std::move(to_delete->next);
+            if(to_delete.get() == tail) tail = prev;
+            current = (prev->next) ? prev->next.get() : head.get();
+        }
+        count--;
+        if(count == 0) break;
+        for(int i = 0; i < 3; ++i){
+            prev = current;
+            current = (current->next) ? current->next.get() : head.get();
+        }
+    }
+}
+
+void CircularList::text_task() const{
+    if (is_empty()) return;
+
+    Node* start_node = head.get();
+    for (int i = 0; i < count; ++i) {
+        Node* next_node = (start_node->next) ? start_node->next.get() : head.get();
+        if (std::stoi(next_node->value) >= 0) {
+            start_node = next_node;
+            break;
+        }
+        start_node = next_node;
+    }
+
+    std::vector<int> current_seq;
+    std::vector<int> max_seq;
+    
+    Node* current = start_node;
+
+    for (int i = 0; i < count; ++i) {
+        Node* next_node = (current->next) ? current->next.get() : head.get();
+        if(std::stoi(current->value) < 0){
+            if(current_seq.empty() or std::stoi(current->value) <= current_seq.back()){
+                current_seq.push_back(std::stoi(current->value));
+            }
+            else{
+            if(current_seq.size() > max_seq.size()) max_seq = current_seq;
+            current_seq.clear();
+            current_seq.push_back(std::stoi(current->value));
+            }
+        }
+        else{
+            if(current_seq.size() > max_seq.size()) max_seq = current_seq;
+            current_seq.clear();
+        }
+        current = next_node;
+    }
+
+    if (current_seq.size() > max_seq.size()) max_seq = current_seq;
+
+    std::cout << "Максимальная последовательность: ";
+    for (int x : max_seq) std::cout << x << " ";
+    std::cout << "\nДлина: " << max_seq.size() << std::endl;
 }

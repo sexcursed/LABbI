@@ -11,13 +11,49 @@ int main(){
   setConsoleUTF8();
   
   int choice;
-  std::cout << "Выберете задачу 1-5:\n";
+  std::cout << "Выберете задачу (1-5):\n";
   std::cin >> choice;
   switch (choice)
   {
-    case 1:{}
+    case 1:{
+      DoubleCircularList list;
+      int fill_type;
+      std::cout << "Выберете тип заполнения(1 - ручной, 2 - рандом, 3 - из файла): ";
+      std::cin >> fill_type;
+      switch (fill_type)
+      {
+        case 1:{
+          int N;
+          std::cout << "Введите кол-во чисел:";
+          std::cin >> N;
+          list.fill_manual(N);
+          break;
+        }
+        case 2:{
+          int N;
+          std::cout << "Введите кол-во чисел:";
+          std::cin >> N;
+          list.fill_random(N);
+          break;
+        }
+        case 3:{
+          std::string filename;
+          std::cout << "Введите название файла: ";
+          std::cin >> filename;
+          list.fill_from_file(filename);
+          break;
+        }
+      }
+      list.print();
+      std::string f_name;
+      std::cout << "Введите название файла:";
+      std::cin >> f_name;
+      list.list_work68(f_name);
+      list.print();
+      break;
+    }
     case 2:{
-      CircularList list;
+      DoubleCircularList list;
       list.set_circular(true);
       int fill_type;
       std::cout << "Выберете тип заполнения(1 - ручной, 2 - рандом, 3 - из файла): ";
@@ -51,7 +87,7 @@ int main(){
       break;
     }
     case 3:{
-      CircularList list;
+      DoubleCircularList list;
       int fill_type;
       std::cout << "Выберете тип заполнения(1 - ручной, 2 - рандом, 3 - из файла): ";
       std::cin >> fill_type;
@@ -87,7 +123,7 @@ int main(){
       break;
     }
     case 4:{
-      CircularList list;
+      DoubleCircularList list;
       int fill_type;
       std::cout << "Выберете тип заполнения(1 - ручной, 2 - рандом, 3 - из файла): ";
       std::cin >> fill_type;
@@ -122,7 +158,43 @@ int main(){
       list.print_with_barrier();
       break;
     }
-    case 5:{}
-    default:{}
+    case 5:{
+      DoubleCircularList list;
+      int fill_type;
+      std::cout << "Выберете тип заполнения(1 - ручной, 2 - рандом, 3 - из файла): ";
+      std::cin >> fill_type;
+      switch (fill_type)
+      {
+        case 1:{
+          int N;
+          std::cout << "Введите кол-во чисел:";
+          std::cin >> N;
+          list.fill_manual(N);
+          break;
+        }
+        case 2:{
+          int N;
+          std::cout << "Введите кол-во чисел:";
+          std::cin >> N;
+          list.fill_random(N);
+          break;
+        }
+        case 3:{
+          std::string filename;
+          std::cout << "Введите название файла: ";
+          std::cin >> filename;
+          list.fill_from_file(filename);
+          break;
+        }
+      }
+      list.print();
+      list.text_task();
+      break;
+    }
+    default:{
+      std::cout << "Неверный выбор\n";
+      break;
+    }
   }
+  return 0;
 }

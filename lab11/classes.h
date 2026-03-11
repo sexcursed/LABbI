@@ -11,7 +11,7 @@ class Node{
     ~Node();
 };
 
-class CircularList{
+class DoubleCircularList{
   private:
     std::unique_ptr<Node> head;
     Node* tail;
@@ -22,8 +22,8 @@ class CircularList{
     void break_circular_connections();
 
 public:
-    CircularList();
-    ~CircularList();
+    DoubleCircularList();
+    ~DoubleCircularList();
 
     bool is_empty() const;
     int size() const;
@@ -51,7 +51,10 @@ public:
     void fill_from_file(const std::string& filename);
 
     void list_work42();
+    void list_work68(std::string filename);
+    void text_task() const;
 
+    int get_size() const { return count; }
     Node* get_head() const { return head.get(); }
     Node* get_tail() const { return tail; }
     void print_with_barrier() const;
@@ -62,9 +65,9 @@ class TList {
     Node* First;
     Node* Last;
     Node* Current;
-    CircularList* list;
+    DoubleCircularList* list;
   public:
-    TList(CircularList& l);
+    TList(DoubleCircularList& l);
     ~TList();
 
     void to_first();

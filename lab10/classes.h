@@ -15,6 +15,7 @@ class LinkedList {
 private:
     std::unique_ptr<Node> head;
     Node* tail;
+    int size;
 
 public:
     LinkedList();
@@ -35,6 +36,7 @@ public:
     void ListWork61(const std::string& filename);
     void insert_sorted(const std::string& val);
     void ListWork3();
+    int get_size() const;
 };
 
 class Stack {

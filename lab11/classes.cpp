@@ -11,16 +11,16 @@ Node::~Node() {
     // std::cout << "Удален элемент: " << value << "\n";
 }
 
-CircularList::CircularList() : head(nullptr), tail(nullptr), count(0), circular(false) {
+DoubleCircularList::DoubleCircularList() : head(nullptr), tail(nullptr), count(0), circular(false) {
     std::cout << "Создан двусвязный список (режим: " << (circular ? "циклический" : "обычный") << ")\n";
 }
 
-CircularList::~CircularList() {
+DoubleCircularList::~DoubleCircularList() {
     clear();
     std::cout << "Список удален\n";
 }
 
-void CircularList::make_circular_connections() {
+void DoubleCircularList::make_circular_connections() {
     if (!circular || count < 2 || !head || !tail) return;
     
     tail->next = std::move(head->next);
@@ -28,7 +28,7 @@ void CircularList::make_circular_connections() {
     head->prev = tail;
 };
 
-void CircularList::break_circular_connections() {
+void DoubleCircularList::break_circular_connections() {
     if (!head || !tail) return;
     
     if (tail->next.get() == head.get()) {
@@ -39,7 +39,7 @@ void CircularList::break_circular_connections() {
     }
 }
 
-void CircularList::set_circular(bool enable) {
+void DoubleCircularList::set_circular(bool enable) {
     if (circular == enable) return;
     
     circular = enable;
@@ -53,15 +53,15 @@ void CircularList::set_circular(bool enable) {
     }
 }
 
-bool CircularList::is_empty() const {
+bool DoubleCircularList::is_empty() const {
     return head == nullptr;
 }
 
-int CircularList::size() const {
+int DoubleCircularList::size() const {
     return count;
 }
 
-void CircularList::push_front(const std::string& val) {
+void DoubleCircularList::push_front(const std::string& val) {
     auto new_node = std::make_unique<Node>(val);
     Node* new_node_ptr = new_node.get();
     
@@ -86,7 +86,7 @@ void CircularList::push_front(const std::string& val) {
     std::cout << "Элемент " << val << " добавлен в начало\n";
 }
 
-void CircularList::push_back(const std::string& val) {
+void DoubleCircularList::push_back(const std::string& val) {
     auto new_node = std::make_unique<Node>(val);
     Node* new_node_ptr = new_node.get();
     
@@ -107,7 +107,7 @@ void CircularList::push_back(const std::string& val) {
     std::cout << "Элемент " << val << " добавлен в конец\n";
 }
 
-void CircularList::insert_after(const std::string& target, const std::string& val) {
+void DoubleCircularList::insert_after(const std::string& target, const std::string& val) {
     Node* target_node = find(target);
     if (!target_node) {
         std::cout << "Элемент " << target << " не найден\n";
@@ -141,7 +141,7 @@ void CircularList::insert_after(const std::string& target, const std::string& va
     std::cout << "Элемент " << val << " вставлен после " << target << "\n";
 }
 
-void CircularList::insert_before(const std::string& target, const std::string& val) {
+void DoubleCircularList::insert_before(const std::string& target, const std::string& val) {
     Node* target_node = find(target);
     if (!target_node) {
         std::cout << "Элемент " << target << " не найден\n";
@@ -174,7 +174,7 @@ void CircularList::insert_before(const std::string& target, const std::string& v
     std::cout << "Элемент " << val << " вставлен перед " << target << "\n";
 }
 
-void CircularList::remove_first() {
+void DoubleCircularList::remove_first() {
     if (is_empty()) {
         std::cout << "Список пуст\n";
         return;
@@ -197,7 +197,7 @@ void CircularList::remove_first() {
     std::cout << "Удален первый элемент: " << removed_value << "\n";
 }
 
-void CircularList::remove_last() {
+void DoubleCircularList::remove_last() {
     if (is_empty()) {
         std::cout << "Список пуст\n";
         return;
@@ -222,7 +222,7 @@ void CircularList::remove_last() {
     std::cout << "Удален последний элемент: " << removed_value << "\n";
 }
 
-void CircularList::remove_by_value(const std::string& val) {
+void DoubleCircularList::remove_by_value(const std::string& val) {
     if (is_empty()) {
         std::cout << "Список пуст\n";
         return;
@@ -255,7 +255,7 @@ void CircularList::remove_by_value(const std::string& val) {
     }
 }
 
-Node* CircularList::find(const std::string& val) const {
+Node* DoubleCircularList::find(const std::string& val) const {
     if (is_empty()) return nullptr;
     
     Node* current = head.get();
@@ -271,7 +271,7 @@ Node* CircularList::find(const std::string& val) const {
     return nullptr;
 }
 
-std::string CircularList::front() const {
+std::string DoubleCircularList::front() const {
     if (is_empty()) {
         std::cout << "Список пуст\n";
         return "";
@@ -279,7 +279,7 @@ std::string CircularList::front() const {
     return head->value;
 }
 
-std::string CircularList::back() const {
+std::string DoubleCircularList::back() const {
     if (is_empty()) {
         std::cout << "Список пуст\n";
         return "";
@@ -287,7 +287,7 @@ std::string CircularList::back() const {
     return tail->value;
 }
 
-void CircularList::clear() {
+void DoubleCircularList::clear() {
     if (is_empty()) return;
     
     if (circular) {
@@ -299,7 +299,7 @@ void CircularList::clear() {
     std::cout << "Список очищен\n";
 }
 
-void CircularList::print() const {
+void DoubleCircularList::print() const {
     if (is_empty()) {
         std::cout << "Список пуст\n";
         return;
@@ -321,7 +321,7 @@ void CircularList::print() const {
 }
 
 
-void CircularList::fill_manual(int N) {
+void DoubleCircularList::fill_manual(int N) {
     for (int i = 0; i < N; ++i) {
         std::string x;
         std::cout << "Введите элемент #" << (i + 1) << ": ";
@@ -330,7 +330,7 @@ void CircularList::fill_manual(int N) {
     }
 }
 
-void CircularList::fill_random(int N) {
+void DoubleCircularList::fill_random(int N) {
     static bool seeded = false;
     if (!seeded) {
         srand(time(nullptr));
@@ -338,13 +338,13 @@ void CircularList::fill_random(int N) {
     }
     
     for (int i = 0; i < N; ++i) {
-        int num = rand() % 1000 + 1;
+        int num = -1000 + rand() % 2001;
         push_back(std::to_string(num));
     }
     std::cout << "Список заполнен " << N << " случайными числами\n";
 }
 
-void CircularList::fill_from_file(const std::string& filename) {
+void DoubleCircularList::fill_from_file(const std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Не удалось открыть файл\n";
@@ -361,7 +361,7 @@ void CircularList::fill_from_file(const std::string& filename) {
     std::cout << "Файл успешно считан в список\n";
 }
 
-void CircularList::list_work42() {
+void DoubleCircularList::list_work42() {
     if (!circular) {
         std::cout << "Необходим циклический режим\n";
         return;
@@ -413,47 +413,8 @@ void CircularList::list_work42() {
     }
 }
 
-void TList::list_work46() {
 
-    if (First == nullptr || First->next.get() == nullptr || First->next.get() == First) {
-        std::cout << "Список пуст\n";
-        return;
-    }
-
-
-    Current = First->next.get(); 
-    std::cout << "Текущим стал первый элемент после барьера: " << Current->value << "\n";
-
-    int count = 0; 
-    int index = 1; 
-
-    while (Current != First) {
-        count++;
-
-        if (index % 2 != 0) {
-            std::string old_val = Current->value;
-            Current->value = "0";
-            std::cout << "Элемент #" << index << " обнулен (был: " << old_val << ")\n";
-        }
-
-        Node* next_node = Current->next.get();
-        
-        if (next_node == nullptr) {
-            break;
-        }
-
-        Current = next_node;
-        index++;
-
-    }
-
-    std::cout << "Количество элементов в списке: " << count << "\n";
-    
-    Current = First; 
-    std::cout << "Текущим элементом стал барьер. Адрес (Current): " << Current << "\n";
-};
-
-void CircularList::print_with_barrier() const {
+void DoubleCircularList::print_with_barrier() const {
     if (!head) {
         std::cout << "Список не инициализирован\n";
         return;
@@ -481,3 +442,79 @@ void CircularList::print_with_barrier() const {
 
     std::cout << " -> Барьер(" << barrier->value << ")\n";
 };
+
+void DoubleCircularList::list_work68(std::string filename){
+    std::ofstream output(filename);
+    Node* prev = tail;
+    Node* current = head.get();
+
+    while(count > 0){
+        output << current->value << "\n";
+
+        std::unique_ptr<Node> to_delete;
+        if(count == 1){
+            head.reset();
+        }
+        else if(current == head.get()){
+            to_delete = std::move(head);
+            head = std::move(to_delete->next);
+            current = head.get();
+        }
+        else{
+            to_delete = std::move(prev->next);
+            prev->next = std::move(to_delete->next);
+            if(to_delete.get() == tail) tail = prev;
+            current = (prev->next) ? prev->next.get() : head.get();
+        }
+        count--;
+        if(count == 0) break;
+        for(int i = 0; i < 3; ++i){
+            prev = current;
+            current = (current->next) ? current->next.get() : head.get();
+        }
+    }
+}
+
+void DoubleCircularList::text_task() const{
+    if (!head) return;
+
+    Node* start_node = head.get();
+    bool found_positive = false;
+    for (int i = 0; i < count; ++i) {
+        if (std::stoi(start_node->value) >= 0) {
+            found_positive = true;
+            break;
+        }
+        start_node = (start_node->next) ? start_node->next.get() : head.get();
+    }
+
+    if (!found_positive) {
+        std::cout << "Все элементы отрицательные. Длина: " << count << std::endl;
+        return;
+    }
+
+    std::vector<int> current_seq;
+    std::vector<int> max_seq;
+    
+    Node* current = (start_node->next) ? start_node->next.get() : head.get();
+
+    for (int i = 0; i < count; ++i) {
+        if (std::stoi(current->value) < 0) {
+            current_seq.push_back(std::stoi(current->value));
+        } else {
+            if (current_seq.size() > max_seq.size()) {
+                max_seq = current_seq;
+            }
+            current_seq.clear();
+        }
+        current = (current->next) ? current->next.get() : head.get();
+    }
+
+    if (current_seq.size() > max_seq.size()) {
+        max_seq = current_seq;
+    }
+
+    std::cout << "Максимальная последовательность: ";
+    for (int x : max_seq) std::cout << x << " ";
+    std::cout << "\nДлина: " << max_seq.size() << std::endl;
+}

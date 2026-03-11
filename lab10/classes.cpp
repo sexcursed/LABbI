@@ -15,7 +15,7 @@ Node::~Node() {
 }
 
 
-LinkedList::LinkedList() : head(nullptr), tail(nullptr) {
+LinkedList::LinkedList() : head(nullptr), tail(nullptr), size(0) {
     std::cout << "Создан односвязный список\n";
 }
 
@@ -38,6 +38,7 @@ void LinkedList::push_back(const std::string& val) {
         tail->next = std::move(new_node);
         tail = new_node_ptr;
     }
+    size++;
     //std::cout << "Добавлен элемент: " << val << "\n";
 }
 
@@ -60,6 +61,7 @@ void LinkedList::remove_first() {
         tail = nullptr;
     }
     std::cout << "Элемент успешно удален\n";
+    size--;
 }
 
 void LinkedList::remove_last() {
@@ -85,6 +87,7 @@ void LinkedList::remove_last() {
         current->next.reset();
         tail = current;
     }
+    size--;
 }
 
 void LinkedList::remove_by_value(const std::string& val) {
@@ -112,7 +115,9 @@ void LinkedList::remove_by_value(const std::string& val) {
         current->next = std::move(current->next->next);
     } else {
         std::cout << "Элемент " << val << " не существует\n";
+        return;
     }
+    size--;
 }
 
 void LinkedList::print() const {
@@ -134,6 +139,7 @@ void LinkedList::clear() {
     head.reset();
     tail = nullptr;
     std::cout << "Список очищен\n";
+    size = 0;
 }
 
 void LinkedList::fill_manual(int N) {
@@ -429,4 +435,8 @@ void Stack::Dynamic5() {
     if (P2) {
         std::cout << "Значение по адресу P2: " << P2->value << "\n";
     }
+}
+
+int LinkedList::get_size(){
+    return size;
 }

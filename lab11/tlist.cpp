@@ -1,11 +1,11 @@
 #include "classes.h"
 #include <iostream>
 
-TList::TList(CircularList& lst) : list(&lst) {
+TList::TList(DoubleCircularList& lst) : list(&lst) {
   First = lst.get_head();
   Last = lst.get_tail();
   Current = nullptr; 
-  std::cout << "Создан объект TList для управления списком\n";
+  std::cout << "Создан объект TList\n";
 }
 
 TList::~TList() {
@@ -17,7 +17,7 @@ void TList::to_first() {
     Current = First;
     std::cout << "Текущим стал первый элемент: " << Current->value << "\n";
   } else {
-    std::cout << "Список пуст, нельзя установить первый элемент\n";
+    std::cout << "Список пуст\n";
   }
 }
 
@@ -41,7 +41,7 @@ void TList::set_data(int D) {
     Current->value = std::to_string(D);
     std::cout << "Значение элемента изменено с " << old_value << " на " << Current->value << "\n";
   } else {
-    std::cout << "Текущий элемент не определен, нельзя изменить значение\n";
+    std::cout << "Текущий элемент не определен\n";
   }
 }
 
@@ -92,7 +92,7 @@ void TList::print_addresses() const {
 void TList::list_work45() {
   
   if (First == nullptr) {
-    std::cout << "Список пуст. Обработка невозможна\n";
+    std::cout << "Список пуст\n";
     return;
   }
   
@@ -120,3 +120,44 @@ void TList::list_work45() {
   std::cout << "Количество элементов в списке: " << position << "\n";
   print_addresses();
 }
+
+
+void TList::list_work46() {
+
+  if (First == nullptr || First->next.get() == nullptr || First->next.get() == First) {
+    std::cout << "Список пуст\n";
+    return;
+  }
+
+
+  Current = First->next.get(); 
+  std::cout << "Текущим стал первый элемент после барьера: " << Current->value << "\n";
+
+  int count = 0; 
+  int index = 1; 
+
+  while (Current != First) {
+    count++;
+
+    if (index % 2 != 0) {
+      std::string old_val = Current->value;
+      Current->value = "0";
+      std::cout << "Элемент #" << index << " обнулен (был: " << old_val << ")\n";
+    }
+
+    Node* next_node = Current->next.get();
+      
+    if (next_node == nullptr) {
+      break;
+    }
+
+    Current = next_node;
+    index++;
+
+  }
+
+  std::cout << "Количество элементов в списке: " << count << "\n";
+  
+  Current = First; 
+  std::cout << "Текущим элементом стал барьер. Адрес (Current): " << Current << "\n";
+};

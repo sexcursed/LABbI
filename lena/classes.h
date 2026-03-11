@@ -53,5 +53,7 @@ public:
     void list_work42();
     void list_work43();
     void list_work46();
+    void list_work68(std::string filename);
+    void text_task() const;
     void print_with_barrier() const;
 };
