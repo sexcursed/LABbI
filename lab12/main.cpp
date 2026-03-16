@@ -2,6 +2,6 @@
 #include "tasks.h"
 
 int main(){
-  std::vector<int> v(6);
-  
+  tasks_handler();
+  return 0;
 }

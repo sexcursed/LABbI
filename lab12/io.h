@@ -5,6 +5,7 @@
 #include <iterator>
 #include <vector>
 #include <string>
+#include <deque>
 
 template <typename It>
 void fill_manual(It begin, It end){
@@ -43,25 +44,25 @@ void print_container(It begin, It end){
 }
 
 template <typename Container>
-void fill_handler(Container&, int N){
+void fill_handler(Container& container){
   int choice;
   std::cout << "\nВыберете тип заполнения контейнера (1 - ручной ввод, 2 - рандом, 3 - из файла): ";
   std::cin >> choice;
   switch (choice)
   {
     case 1:{
-      fill_manual(Container.begin(), Container.end());
+      fill_manual(container.begin(), container.end());
       break;
     }
     case 2:{
-      fill_random(Container.begin(), Container.end());
+      fill_random(container.begin(), container.end());
       break;
     }
     case 3:{
       std::cout << "\nВведите название файла: ";
       std::string name;
       std::cin >> name;
-      fill_from_file(Container.begin(), Container.end(), name);
+      fill_from_file(container.begin(), container.end(), name);
       break;
     }
     default:{
