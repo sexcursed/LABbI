@@ -10,7 +10,7 @@
 template <typename It>
 void fill_manual(It begin, It end){
   std::cout << "Введите " << std::distance(begin, end) << " чисел:\n";
-  for(auto it = begin; it != end; ++it){
+  for(It it = begin; it != end; ++it){
     std::cin >> *it;
   }
 }
@@ -21,7 +21,7 @@ void fill_random(It begin, It end){
   std::mt19937 gen(rd());
   std::uniform_int_distribution<> dis(-100, 100);
 
-  for(auto it = begin; it != end; ++it){
+  for(It it = begin; it != end; ++it){
     *it = dis(gen);
   }
 }
@@ -37,7 +37,7 @@ void fill_from_file(It begin, It end, std::string filename){
 template <typename It>
 void print_container(It begin, It end){
   std::cout << "[ ";
-  for(auto it = begin; it != end; ++it){
+  for(It it = begin; it != end; ++it){
     std::cout << *it << " ";
   }
   std::cout << "]\n";

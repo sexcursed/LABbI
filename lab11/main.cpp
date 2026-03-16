@@ -1,14 +1,16 @@
 #include "classes.h"
 #include <iostream>
-#include <windows.h>
+//#include <windows.h>
 
+/*
 void setConsoleUTF8(){
   SetConsoleOutputCP(CP_UTF8);
   SetConsoleCP(CP_UTF8);
 }
+*/
 
 int main(){
-  setConsoleUTF8();
+  //setConsoleUTF8();
   
   int choice;
   std::cout << "Выберете задачу (1-5):\n";
@@ -198,3 +200,11 @@ int main(){
   }
   return 0;
 }
+
+/*
+1. list_work68 - выводит содержимое кольца с шагом 4 в файл
+2. list_work42 - удалить элементы с одинаковыми соседями, также вернуть ссылку на последний элемент
+3. list_work45 - удалить с помощью TList элементы на нечет позициях и вывести всякую инфу
+4. list_work48 - то же самое с барьерным элементом
+5. 3 текстовая задача - в циклич списке найти последовательность отрицательных чисел максимальной длины
+*/

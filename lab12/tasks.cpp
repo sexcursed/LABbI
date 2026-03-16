@@ -19,12 +19,14 @@ void STL2Seq10(std::list<int>& l){
     std::cout << "Необходимо кол-во элементов, которое делится на 3.\n";
     return;
   }
-  auto third_end = std::next(l.begin(), l.size() / 3);
-  auto reverse_begin = std::make_reverse_iterator(third_end);
-  auto reverse_end = std::make_reverse_iterator(l.begin());
+  //std::list<int>::iterator third_end = std::next(l.begin(), l.size() / 3);
+  std::list<int>::reverse_iterator reverse_begin = l.rbegin() + ;
+  std::list<int>::reverse_iterator reverse_end = l.rend();
 
+  std::cout << "Исходный контейнер: ";
   print_container(l.begin(),l.end());
   l.insert(l.end(), reverse_begin, reverse_end);
+  std::cout << "Итоговый контейнер: ";
   print_container(l.begin(),l.end());
 }
 
@@ -34,7 +36,7 @@ void STL2Seq28(std::deque<int>& d){
     return;
   }
   print_container(d.begin(), d.end());
-  auto i = d.begin();
+  std::deque<int>::iterator i = d.begin();
   auto N = d.size();
   for(auto j = 0; j < N/4; ++j){
     i = d.erase(++i);
@@ -45,7 +47,7 @@ void STL2Seq28(std::deque<int>& d){
 void STL1Iter10(){
 
   int i = 1;
-  std::cout << "Введите 2 и более числа (ctrl+d для завершения): ";
+  std::cout << "Введите 2 и более числа (ctrl+d после ввода): ";
   std::ostream_iterator<double> out_iter(std::cout, " ");
 
   std::remove_copy_if(std::istream_iterator<double>(std::cin), std::istream_iterator<double>(), out_iter,[&i](double){
@@ -58,6 +60,7 @@ void tasks_handler(){
   std::cout << "Выберете задачу (1 - 4):";
   int choice;
   std::cin >> choice;
+  std::cin.clear();
   switch (choice)
   {
   case 1:{
