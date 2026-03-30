@@ -25,32 +25,53 @@ void STL3Alg18(std::deque<int>& d){
     return;
   }
   int N;
-  std::cout << "Введите N, такое что 2N >= " << d.size();
+  std::cout << "Введите N, такое что 2N <= " << d.size() << ": ";
   std::cin >> N;
   if(d.size() < 2 * N){
     std::cout << "Кол-во элементов дека должно быть не менне 2N.\n";
     return;
   }
-  int gen = 0;
-  std::generate(d.begin(), std::next(d.begin(), N), [&gen](){ return ++gen; });
-  gen = 0;
-  std::generate(d.rbegin(), std::next(d.rbegin(), N), [&gen](){ return ++gen; });
+  struct Gen{
+    int num = 0;
+    int operator()(){
+      return ++num;
+    }
+  };
+  Gen gen;
+  std::generate(d.begin(), std::next(d.begin(), N), gen);
+  gen.num = 0;
+  std::generate(d.rbegin(), std::next(d.rbegin(), N), gen);
   print_container(d.begin(), d.end());
 }
 
-void STL3Alg47(std::vector<int>& v){
+void STL3Alg48(std::vector<int>& v){
   if(v.empty()){
     std::cout << "Вектор пуст.\n";
     return;
   }
-  if(v.size()%2 != 0){
-    std::cout << "Необходимо четное кол-во элементов.\n";
+  if(v.size()%3 != 0){
+    std::cout << "Необходимо кол-во элементов, которое делится на 3.\n";
     return;
   }
-  std::vector<int>::iterator middle = std::next(v.begin(), v.size()/2);
-  std::sort(middle, v.end());
+  struct Comparator{
+    int get_group(int x){
+      if(x < 0) return 1;
+      if(x == 0) return 2;
+      return 3;
+    }
+    bool operator()(int a, int b){
+      return get_group(a) < get_group(b);
+    }
+  };
+  Comparator comp;
+  int n = v.size() / 3;
   print_container(v.begin(), v.end());
-  std::inplace_merge(v.begin(), middle, v.end());
+  std::sort(v.begin(), v.begin() + n);
+  std::sort(v.begin() + n, v.begin() + 2* n);
+  std::sort(v.begin() + 2*n, v.end());
+  print_container(v.begin(), v.end());
+  std::inplace_merge(v.begin(),v.begin() + n, v.begin() + 2*n,comp);
+  std::inplace_merge(v.begin(), v.begin() + 2*n, v.end(), comp);
   print_container(v.begin(), v.end());
 }
 
@@ -94,13 +115,11 @@ void tasks_handler(){
     }
     case 3:{
       int N;
-      std::cout << "Введите четное кол-во элементов:";
+      std::cout << "Введите кол-во элементов, которое делится на 3:";
       std::cin >> N;
       std::vector<int> Vector(N);
       fill_handler(Vector);
-      std::sort(Vector.begin(), std::next(Vector.begin(), Vector.size()/2));
-      print_container(Vector.begin(), Vector.end());
-      STL3Alg47(Vector);
+      STL3Alg48(Vector);
       break;
     }
     case 4:{

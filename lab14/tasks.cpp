@@ -8,14 +8,43 @@ void STL5Assoc2(std::vector<int> v0){
   int N;
   std::cout << "Введите желаемое кол-во векторов:";
   std::cin >> N;
-  for(int i = 0; i < N; ++i){
-    std::cout << "Введите размер генерируемого вектора: ";
-    int size;
-    std::cin >> size;
-    std::vector<int> vi(size);
-    fill_handler(vi);
-    vN.push_back(vi);
+  int size;
+  std::cout << "Введите размер генерируемого вектора: ";
+  std::cin >> size;
+  int choice;
+  std::cout << "Выберете тип заполнения (1 - ручной, 2 - рандом, 3 - из файла):";
+  std::cin >> choice;
+  switch (choice)
+  {
+  case 1:{
+    for(int i = 0; i < N; ++i){
+      std::vector<int> vi(size);
+      fill_manual(vi.begin(), vi.end());
+      vN.push_back(vi);
+    }
+    break;
   }
+  case 2:{
+    for(int i = 0; i < N; ++i){
+      std::vector<int> vi(size);
+      fill_random(vi.begin(), vi.end());
+      vN.push_back(vi);
+    }
+    break;
+  }
+  case 3:{
+    for(int i = 0; i < N; ++i){
+      std::vector<int> vi(size);
+      fill_from_file(vi.begin(), vi.end(), "text.txt");
+      vN.push_back(vi);
+    }
+    break;
+  }
+  default:{
+    return;
+  }
+  }
+  
   std::cout << "Исходный вектор: ";
   print_container(v0.begin(), v0.end());
   for(std::vector<int>& x: vN){
@@ -80,6 +109,7 @@ void tasks_handler(){
       std::cin >> N;
       std::vector<int> V(N);
       fill_handler(V);
+      print_container(V.begin(), V.end());
       STL5Assoc21(V);
       break;
     }
