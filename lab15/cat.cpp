@@ -3,14 +3,14 @@
 Cat::Cat(std::string n) : name(n){};
 
 std::string Cat::to_string() const{
-  return "cat:" + name;
+  return "кот:" + name;
 }
 
 void Cat::meow(int n) const{
   std::cout << name << ": ";
   for(int i = 0; i < n; ++i){
-    if(i > 0) std::cout << "-meow";
-    else std::cout << "meow";
+    if(i > 0) std::cout << "-мяу";
+    else std::cout << "мяу";
   }
   std::cout << "!\n";
 }

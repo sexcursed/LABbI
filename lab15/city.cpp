@@ -3,6 +3,10 @@
 City::City(std::string n): name(n){};
 
 void City::add_path(City* target, int cost){
+  if(target->name == name){
+    std::cout << "Петля недопускается.\n";
+    return;
+  }
   paths[target] = cost;
 }
 
@@ -11,7 +15,7 @@ std::string City::get_name() const{
 }
 
 void City::print() const{
-  std::cout << "Name: " << name << "\n";
+  std::cout << "Название: " << name << "\n";
 
   bool first = true;
   for(std::pair<City*, int> item : paths){

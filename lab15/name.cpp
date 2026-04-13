@@ -22,10 +22,10 @@ void Name::build_full_name(){
 
 void Name::print() const{
   if(full_name.empty()){
-    std::cout << "Name is empty.\n";
+    std::cout << "Пустое имя.\n";
     return;
   }
-  std::cout << "Full name: " << full_name << "\n";
+  std::cout << "Полное имя: " << full_name << "\n";
 }
 
 void Name::set_second_name(std::string secondn){

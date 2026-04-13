@@ -8,7 +8,7 @@ Person::Person(Name n, int h, std::shared_ptr<Person> f): name(n), father(f){
       name.set_second_name(father->name.get_second_name());
     }
     if(name.get_patronymic().empty() and !father->name.get_first_name().empty()){
-      name.set_patronymic(father->name.get_first_name() + "ovich");
+      name.set_patronymic(father->name.get_first_name() + "ович");
     }
   }
   name.build_full_name();
