@@ -1,4 +1,4 @@
-
+#pragma once
 class Node{
     private:
         Node* left;
@@ -12,14 +12,14 @@ class Node{
         void set_right(Node* p);
         void set_value(int n);
 
-        Node get_left() const;
-        Node get_right() const;
-        Node get_value() const;
+        Node* get_left() const;
+        Node* get_right() const;
+        int get_value() const;
 
-        void has_left() const;
-        void has_right() const;
-        void is_leaf() const;
+        bool has_left() const;
+        bool has_right() const;
+        bool is_leaf() const;
 
-        Node insert(Node* p, int v);
+        Node* insert(Node* p, int v);
         void clear();
 };

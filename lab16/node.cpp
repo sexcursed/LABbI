@@ -5,12 +5,16 @@ Node* Node::get_left() const{
     return left;
 }
 
-Node* Node::get_left() const{
+Node* Node::get_right() const{
     return right;
 }
 
-Node* Node::get_value() const{
+int Node::get_value() const{
     return value;
+}
+
+void Node::set_value(int n){
+    value = n;
 }
 
 void Node::set_left(Node* p){
@@ -21,15 +25,15 @@ void Node::set_right(Node* p){
     right = p;
 }
 
-void Node::has_left() const{
+bool Node::has_left() const{
     return left != nullptr;
 }
 
-void Node::has_right() const{
+bool Node::has_right() const{
     return right != nullptr;
 }
 
-void Node::is_leaf() const{
+bool Node::is_leaf() const{
     return (!has_left() and !has_right());
 }
 
