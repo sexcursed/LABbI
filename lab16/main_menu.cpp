@@ -90,6 +90,93 @@ void MainMenu::handle_random_fill(Search_tree& tree) {
     tree.fill_random(N, min_val, max_val);
 }
 
+// Новые функции для работы с BinaryTree с проверкой ввода
+void MainMenu::handle_manual_fill_binary(BinaryTree& tree) {
+    int N;
+    std::string input;
+    
+    std::cout << "Введите количество элементов: ";
+    std::cin >> input;
+    
+    if (!TreeValidator::validate_number_input(input, N)) {
+        std::cout << "Операция отменена\n";
+        return;
+    }
+    
+    if (N <= 0) {
+        std::cout << "Ошибка: количество элементов должно быть положительным\n";
+        return;
+    }
+    
+    std::cout << "Введите " << N << " чисел: ";
+    std::vector<int> numbers;
+    int count = 0;
+    
+    while (count < N) {
+        std::cin >> input;
+        int val;
+        if (TreeValidator::validate_number_input(input, val)) {
+            numbers.push_back(val);
+            count++;
+        } else {
+            std::cout << "Попробуйте снова: ";
+        }
+    }
+    
+    for (int val : numbers) {
+        tree.insert(val);
+    }
+}
+
+void MainMenu::handle_random_fill_binary(BinaryTree& tree) {
+    int N, min_val, max_val;
+    std::string input;
+    
+    std::cout << "Введите количество элементов: ";
+    std::cin >> input;
+    if (!TreeValidator::validate_number_input(input, N)) {
+        std::cout << "Операция отменена\n";
+        return;
+    }
+    
+    std::cout << "Введите минимальное значение: ";
+    std::cin >> input;
+    if (!TreeValidator::validate_number_input(input, min_val)) {
+        std::cout << "Операция отменена\n";
+        return;
+    }
+    
+    std::cout << "Введите максимальное значение: ";
+    std::cin >> input;
+    if (!TreeValidator::validate_number_input(input, max_val)) {
+        std::cout << "Операция отменена\n";
+        return;
+    }
+    
+    if (min_val > max_val) {
+        std::cout << "Ошибка: минимальное значение не может быть больше максимального\n";
+        return;
+    }
+    
+    tree.fill_random(N, min_val, max_val);
+    std::cout << "Дерево успешно заполнено случайными числами\n";
+}
+
+void MainMenu::handle_file_fill_binary(BinaryTree& tree) {
+    std::string filename;
+    std::cout << "Введите имя файла: ";
+    std::cin >> filename;
+    
+    std::vector<int> numbers;
+    if (TreeValidator::validate_file_numbers(filename, numbers)) {
+        for (int val : numbers) {
+            tree.insert(val);
+        }
+        std::cout << "Дерево успешно заполнено из файла\n";
+    } else {
+        std::cout << "Заполнение из файла отменено\n";
+    }
+}
 
 void MainMenu::task1_handler() {
     std::cout << "\n=== Задание 1: вывод дерева в обратном порядке ===\n";
@@ -130,23 +217,47 @@ void MainMenu::task2_handler() {
     switch (choice) {
         case 1: {
             int N;
+            std::string input;
             std::cout << "Введите количество элементов N: ";
-            std::cin >> N;
+            std::cin >> input;
+            if (!TreeValidator::validate_number_input(input, N)) {
+                std::cout << "Операция отменена\n";
+                return;
+            }
             std::cout << "Введите " << N << " чисел: ";
             for (int i = 0; i < N; ++i) {
+                std::cin >> input;
                 int val;
-                std::cin >> val;
-                original_numbers.push_back(val);
-                tree.insert(val);
+                if (TreeValidator::validate_number_input(input, val)) {
+                    original_numbers.push_back(val);
+                    tree.insert(val);
+                } else {
+                    std::cout << "Попробуйте снова: ";
+                    i--;
+                }
             }
             break;
         }
         case 2: {
             int N, min_val, max_val;
+            std::string input;
             std::cout << "Введите количество элементов N: ";
-            std::cin >> N;
+            std::cin >> input;
+            if (!TreeValidator::validate_number_input(input, N)) {
+                std::cout << "Операция отменена\n";
+                return;
+            }
             std::cout << "Введите минимальное и максимальное значение: ";
-            std::cin >> min_val >> max_val;
+            std::cin >> input;
+            if (!TreeValidator::validate_number_input(input, min_val)) {
+                std::cout << "Операция отменена\n";
+                return;
+            }
+            std::cin >> input;
+            if (!TreeValidator::validate_number_input(input, max_val)) {
+                std::cout << "Операция отменена\n";
+                return;
+            }
             std::srand(static_cast<unsigned int>(std::time(nullptr)));
             for (int i = 0; i < N; ++i) {
                 int val = min_val + std::rand() % (max_val - min_val + 1);
@@ -193,9 +304,6 @@ void MainMenu::task2_handler() {
     // Вывод отсортированного набора (инфиксный обход)
     std::cout << "Возрастание: ";
     tree.print_ascending();
-    
-    //std::cout << "Убывание: ";
-    //tree.print_descending();
 }
 
 // Задание 3: проверка дерева на идеальную сбалансированность
@@ -206,52 +314,50 @@ void MainMenu::task3_handler() {
     
     // Выбор способа заполнения
     int fill_choice;
+    std::string input;
+    
     std::cout << "Выберите способ построения дерева:\n";
     std::cout << "1. Вручную (ввод значений)\n";
     std::cout << "2. Случайными числами\n";
     std::cout << "3. Из файла\n";
     std::cout << "Ваш выбор: ";
-    std::cin >> fill_choice;
+    std::cin >> input;
+    
+    if (!TreeValidator::validate_number_input(input, fill_choice)) {
+        std::cout << "Неверный ввод! Возврат в главное меню.\n";
+        return;
+    }
     
     switch (fill_choice) {
-        case 1: {
-            int N;
-            std::cout << "Введите количество элементов: ";
-            std::cin >> N;
-            std::cout << "Введите " << N << " чисел: ";
-            tree.fill_manual(N);
+        case 1:
+            handle_manual_fill_binary(tree);
             break;
-        }
-        case 2: {
-            int N, min_val, max_val;
-            std::cout << "Введите количество элементов: ";
-            std::cin >> N;
-            std::cout << "Введите минимальное и максимальное значение: ";
-            std::cin >> min_val >> max_val;
-            tree.fill_random(N, min_val, max_val);
+        case 2:
+            handle_random_fill_binary(tree);
             break;
-        }
-        case 3: {
-            std::string filename;
-            std::cout << "Введите имя файла: ";
-            std::cin >> filename;
-            tree.fill_from_file(filename);
+        case 3:
+            handle_file_fill_binary(tree);
             break;
-        }
         default:
             std::cout << "Неверный выбор!\n";
             return;
     }
+    
+    if (tree.is_empty()) {
+        std::cout << "Дерево пусто! Проверка невозможна.\n";
+        return;
+    }
 
-    // Вывод визуального представления дерева
+
     std::cout << "\nВизуальное представление дерева:\n";
     tree.print_tree();
 
-    
-    // Вывод указателя на корень
+
     std::cout << "\nУказатель на корень дерева: " << tree.get_root() << "\n";
     
-    // Проверка на идеальную сбалансированность
+
+    
+
     std::cout << "\nРезультат проверки:\n";
     if (tree.is_perfectly_balanced()) {
         std::cout << "Дерево является ИДЕАЛЬНО СБАЛАНСИРОВАННЫМ.\n";
@@ -262,6 +368,7 @@ void MainMenu::task3_handler() {
 
 void MainMenu::run() {
     int main_choice;
+    std::string input;
     
     do {
         std::cout << "\n========================================\n";
@@ -272,7 +379,13 @@ void MainMenu::run() {
         std::cout << "3. Задание 3: Проверить дерево на идеальную сбалансированность\n";
         std::cout << "0. Выход\n";
         std::cout << "Ваш выбор: ";
-        std::cin >> main_choice;
+        std::cin >> input;
+        
+        if (!TreeValidator::validate_number_input(input, main_choice)) {
+            std::cout << "Неверный ввод! Пожалуйста, введите число.\n";
+            clear_input();
+            continue;
+        }
         
         switch (main_choice) {
             case 1:

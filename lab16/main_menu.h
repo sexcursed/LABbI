@@ -1,6 +1,6 @@
 #pragma once
 #include "search_tree.h"
-#include "binary_tree.h"  // Добавить эту строку
+#include "binary_tree.h"
 #include <vector>
 #include <string>
 
@@ -13,9 +13,13 @@ private:
     static void handle_random_fill(Search_tree& tree);
     static void handle_file_fill(Search_tree& tree);
     
+    static void handle_manual_fill_binary(BinaryTree& tree);
+    static void handle_random_fill_binary(BinaryTree& tree);
+    static void handle_file_fill_binary(BinaryTree& tree);
+    
     static void task1_handler();
     static void task2_handler();
-    static void task3_handler();  // Добавить объявление
+    static void task3_handler();
     
     static int get_fill_method_choice(const std::string& prompt);
     
