@@ -18,7 +18,7 @@ void print_menu() {
     std::cout << "\n========================================\n";
     std::cout << "        КАЛЬКУЛЯТОР ВЫРАЖЕНИЙ\n";
     std::cout << "========================================\n";
-    std::cout << "1. CalcTree3 - Обратная польская запись\n";
+    std::cout << "1. CalcTree7 - Префиксная запись\n";
     std::cout << "2. CalcTree25 - Инфиксная запись\n";
     std::cout << "0. Выход\n";
     std::cout << "========================================\n";
@@ -33,12 +33,13 @@ void print_input_menu() {
     std::cout << "Выберите способ: ";
 }
 
-void print_calctree3_menu() {
-    std::cout << "\n--- CalcTree3: Обратная польская запись ---\n";
-    std::cout << "Операции: + - * / %\n";
+void print_calctree7_menu() {
+    std::cout << "\n--- CalcTree7: Префиксная запись ---\n";
+    std::cout << "Операции: + - * / % ^\n";
     std::cout << "Операнды: целые числа от 0 до 9\n";
-    std::cout << "Пример: 2 3 + 4 *  (2+3)*4\n";
-    std::cout << "Кодирование операций: +(-1), -(-2), *(-3), /(-4), %(-5)\n\n";
+    std::cout << "Пример: + 2 * 3 4  (2+3*4)\n";
+    std::cout << "Пример: * + 2 3 4  ((2+3)*4)\n";
+    std::cout << "Кодирование операций: +(-1), -(-2), *(-3), /(-4), %(-5), ^(-6)\n\n";
 }
 
 void print_calctree25_menu() {
@@ -49,67 +50,38 @@ void print_calctree25_menu() {
     std::cout << "Кодирование операций: +(-1), -(-2), *(-3), /(-4), %(-5), ^(-6)\n\n";
 }
 
-// Простая генерация корректного RPN выражения
-std::string generate_random_rpn(int num_operands) {
-    if(num_operands < 2) return "0 1 +";
+// Генерация корректного префиксного выражения
+std::string generate_random_prefix(int num_operands) {
+    if(num_operands < 2) return "+ 0 1";
     
-    std::vector<std::string> result;
-    const char* ops[] = {"+", "-", "*", "/", "%"};
-    
-    // Добавляем операнды
-    for(int i = 0; i < num_operands; i++) {
-        result.push_back(std::to_string(std::rand() % 10));
-    }
-    
-    // Добавляем операторы (на 1 меньше, чем операндов)
-    for(int i = 0; i < num_operands - 1; i++) {
-        int op_idx = std::rand() % 5;
-        result.push_back(ops[op_idx]);
-    }
-    
-    // Собираем строку
-    std::string output;
-    for(size_t i = 0; i < result.size(); i++) {
-        if(i > 0) output += " ";
-        output += result[i];
-    }
-    
-    return output;
-}
-
-// Простая генерация корректного инфиксного выражения
-std::string generate_random_infix(int num_operands) {
-    if(num_operands < 2) return "1+2";
-    
-    std::string result;
     const char* ops[] = {"+", "-", "*", "/", "%", "^"};
+    std::vector<std::string> result;
     
-    // Добавляем первый операнд
-    if(std::rand() % 2 == 0) {
-        result += std::to_string(std::rand() % 30 + 1);
-    } else {
-        result += "x";
-    }
-    
-    // Добавляем операторы и операнды
-    for(int i = 1; i < num_operands; i++) {
-        // Добавляем оператор
-        int op_idx = std::rand() % 6;
-        result += ops[op_idx];
-        
-        // Добавляем операнд
-        if(std::rand() % 2 == 0) {
-            result += std::to_string(std::rand() % 30 + 1);
-        } else {
-            result += "x";
+    // Для префиксной записи используем рекурсивную генерацию
+    std::function<std::string(int)> generate = [&](int remaining) -> std::string {
+        if(remaining == 1) {
+            return std::to_string(std::rand() % 10);
         }
-    }
+        
+        // Выбираем оператор
+        int op_idx = std::rand() % 6;
+        std::string expr = ops[op_idx];
+        
+        // Распределяем операнды между левым и правым поддеревом
+        int left_count = 1 + std::rand() % (remaining - 1);
+        int right_count = remaining - left_count;
+        
+        expr += " " + generate(left_count);
+        expr += " " + generate(right_count);
+        
+        return expr;
+    };
     
-    return result;
+    return generate(num_operands);
 }
 
-void handle_calctree3() {
-    print_calctree3_menu();
+void handle_calctree7() {
+    print_calctree7_menu();
     
     Validator validator;
     BinaryTree tree;
@@ -125,8 +97,8 @@ void handle_calctree3() {
     
     switch(choice) {
         case 1: { // Ручной ввод
-            std::cout << "Введите выражение в обратной польской записи (каждый элемент через пробел):\n";
-            std::cout << "Пример: 2 3 + 4 *\n";
+            std::cout << "Введите выражение в префиксной форме (каждый элемент через пробел):\n";
+            std::cout << "Пример: + 2 * 3 4\n";
             std::cout << "Ваш ввод: ";
             
             std::vector<std::string> tokens;
@@ -140,19 +112,19 @@ void handle_calctree3() {
                 tokens.push_back(token);
             }
             
-            if(!validator.validate_rpn_expression(tokens)) {
+            if(!validator.validate_prefix_expression(tokens)) {
                 std::cout << "Некорректное выражение. Построение дерева отменено.\n";
                 return;
             }
             
             // Создаем временный файл для ввода
-            std::ofstream temp("temp_rpn.txt");
+            std::ofstream temp("temp_prefix.txt");
             for(const auto& t : tokens) {
                 temp << t << " ";
             }
             temp.close();
             
-            tree.build_expression_tree_from_file("temp_rpn.txt");
+            tree.build_expression_tree_from_file_prefix("temp_prefix.txt");
             break;
         }
         case 2: { // Случайные данные
@@ -169,16 +141,16 @@ void handle_calctree3() {
             }
             
             std::srand(static_cast<unsigned int>(std::time(nullptr)));
-            std::string expression = generate_random_rpn(N);
+            std::string expression = generate_random_prefix(N);
             
             std::cout << "Сгенерировано выражение: " << expression << std::endl;
             
             // Сохраняем во временный файл
-            std::ofstream temp("temp_rpn.txt");
+            std::ofstream temp("temp_prefix.txt");
             temp << expression;
             temp.close();
             
-            tree.build_expression_tree_from_file("temp_rpn.txt");
+            tree.build_expression_tree_from_file_prefix("temp_prefix.txt");
             break;
         }
         case 3: { // Из файла
@@ -187,12 +159,12 @@ void handle_calctree3() {
             std::cin >> filename;
             
             std::vector<std::string> tokens;
-            if(!validator.validate_rpn_file(filename, tokens)) {
+            if(!validator.validate_prefix_file(filename, tokens)) {
                 std::cout << "Файл содержит некорректное выражение.\n";
                 return;
             }
             
-            tree.build_expression_tree_from_file(filename);
+            tree.build_expression_tree_from_file_prefix(filename);
             break;
         }
     }
@@ -205,13 +177,21 @@ void handle_calctree3() {
         int result = tree.evaluate_subtree(tree.get_root());
         std::cout << "Значение выражения: " << result << std::endl;
         
-        std::cout << "\n=== После замены умножения (кодированный вывод) ===\n";
-        tree.replace_multi(tree.get_root());
+        std::cout << "\n=== После замены поддеревьев со значением от 0 до 9 ===\n";
+        tree.replace_subtrees_range_0_9();
         tree.print_tree_coded();
+        
+        std::cout << "\n=== Указатель на корень полученного дерева ===\n";
+        std::cout << "Адрес корня: " << tree.get_root() << std::endl;
+        
+        std::ofstream out("result.txt");
+        out << "Указатель на корень: " << tree.get_root() << std::endl;
+        out.close();
     }
 }
 
 void handle_calctree25() {
+    // ... (оставляем без изменений)
     print_calctree25_menu();
     
     Validator validator;
@@ -229,7 +209,7 @@ void handle_calctree25() {
     std::string expression;
     
     switch(choice) {
-        case 1: { // Ручной ввод
+        case 1: {
             std::cout << "Введите выражение в инфиксной форме: ";
             validator.clear_input_buffer();
             std::getline(std::cin, expression);
@@ -247,7 +227,7 @@ void handle_calctree25() {
             tree.build_from_infix(expression);
             break;
         }
-        case 2: { // Случайные данные
+        case 2: {
             int len;
             while(true) {
                 std::cout << "Введите количество операндов (минимум 2): ";
@@ -261,7 +241,18 @@ void handle_calctree25() {
             }
             
             std::srand(static_cast<unsigned int>(std::time(nullptr)));
-            expression = generate_random_infix(len);
+            // Генерация инфиксного выражения
+            const char* ops[] = {"+", "-", "*", "/", "%", "^"};
+            expression = std::to_string(std::rand() % 30 + 1);
+            for(int i = 1; i < len; i++) {
+                int op_idx = std::rand() % 6;
+                expression += ops[op_idx];
+                if(std::rand() % 2 == 0) {
+                    expression += std::to_string(std::rand() % 30 + 1);
+                } else {
+                    expression += "x";
+                }
+            }
             
             std::cout << "Сгенерировано выражение: " << expression << std::endl;
             
@@ -273,7 +264,7 @@ void handle_calctree25() {
             tree.build_from_infix(expression);
             break;
         }
-        case 3: { 
+        case 3: {
             std::string filename;
             std::cout << "Введите имя файла: ";
             std::cin >> filename;
@@ -292,7 +283,6 @@ void handle_calctree25() {
         std::cout << "\n=== Исходное дерево (кодированный вывод) ===\n";
         tree.print_tree_coded();
         
-
         std::ofstream out("FN2.txt");
         out << "=== Исходное дерево (кодированный вывод) ===\n";
         out.close();
@@ -321,7 +311,6 @@ void handle_calctree25() {
         std::cout << "\n=== Преобразованное дерево (кодированный вывод) ===\n";
         tree.print_tree_coded();
         
-
         std::ofstream out2("FN2.txt", std::ios::app);
         out2 << "\n=== Результат при x = " << x_value << ": " << result << " ===\n";
         out2 << "\n=== Преобразованное дерево (кодированный вывод) ===\n";
@@ -336,7 +325,6 @@ void handle_calctree25() {
 }
 
 int main() {
-    
     setConsoleUTF8();
     Validator validator;
     int choice;
@@ -350,7 +338,7 @@ int main() {
         
         switch(choice) {
             case 1:
-                handle_calctree3();
+                handle_calctree7();
                 break;
             case 2:
                 handle_calctree25();

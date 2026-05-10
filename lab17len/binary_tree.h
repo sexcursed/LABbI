@@ -27,6 +27,7 @@ private:
     int evaluate_subtree_int(Node* node, int x_val);
     Node* replace_const_subtrees(Node* node, int x_val);
     void print_tree_sideways(Node* node, int level, std::ofstream& out) const;
+    Node* build_from_prefix(const std::vector<std::string>& tokens, size_t& index);
     
 public:
     BinaryTree(Node* r = nullptr);
@@ -68,4 +69,8 @@ public:
     void print_expression_tree() const;
     void print_tree_coded() const;
     void print_tree_normal() const;
+
+    void build_expression_tree_from_file_prefix(std::string filename);
+    void replace_subtrees_range_0_9();
+    Node* replace_subtrees_range_0_9_rec(Node* node);
 };

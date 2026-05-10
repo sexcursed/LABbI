@@ -570,7 +570,7 @@ void BinaryTree::print_tree_coded() const {
             std::cout << "   ";
         }
         
-        // Вывод с кодированием операций числами
+
         std::cout << node->get_value() << std::endl;
         
         print_node(node->get_left(), level + 1);
@@ -593,7 +593,7 @@ void BinaryTree::print_tree_normal() const {
             std::cout << "   ";
         }
         
-        // Нормальный вывод (символы операций)
+
         if(is_op_coded(node->get_value())){
             switch(node->get_value()){
                 case -1: std::cout << "+"; break;
@@ -617,4 +617,101 @@ void BinaryTree::print_tree_normal() const {
     };
     
     print_node(root, 0);
+}
+
+
+void BinaryTree::build_expression_tree_from_file_prefix(std::string filename) {
+    clear();
+    std::ifstream file(filename);
+    if(!file.is_open()){
+        std::cout << "Не удалось открыть файл\n";
+        return;
+    }
+    
+    std::vector<std::string> tokens;
+    std::string token;
+    while(file >> token){
+        tokens.push_back(token);
+    }
+    file.close();
+    
+    if(tokens.empty()){
+        std::cout << "Файл пуст\n";
+        return;
+    }
+    
+    size_t index = 0;
+    root = build_from_prefix(tokens, index);
+    
+    if(index != tokens.size()){
+        std::cout << "Ошибка: некорректное выражение (лишние токены)\n";
+        clear();
+    }
+    else{
+        std::cout << "Дерево выражения успешно построено из префиксной формы\n";
+    }
+}
+
+Node* BinaryTree::build_from_prefix(const std::vector<std::string>& tokens, size_t& index) {
+    if(index >= tokens.size()){
+        return nullptr;
+    }
+    
+    std::string token = tokens[index++];
+    
+    if(token == "+" || token == "-" || token == "*" || token == "/" || token == "%" || token == "^"){
+        int op_coded;
+        if(token == "+") op_coded = -1;
+        else if(token == "-") op_coded = -2;
+        else if(token == "*") op_coded = -3;
+        else if(token == "/") op_coded = -4;
+        else if(token == "%") op_coded = -5;
+        else op_coded = -6;
+        
+        Node* left = build_from_prefix(tokens, index);
+        Node* right = build_from_prefix(tokens, index);
+        
+        if(left == nullptr || right == nullptr){
+            delete left;
+            delete right;
+            return nullptr;
+        }
+        
+        return new Node(left, right, op_coded);
+    }
+    else{
+        if(token.length() == 1 && std::isdigit(token[0])){
+            int num = std::stoi(token);
+            if(num >= 0 && num <= 9){
+                return new Node(nullptr, nullptr, num);
+            }
+        }
+        std::cout << "Некорректный операнд: " << token << std::endl;
+        return nullptr;
+    }
+}
+
+void BinaryTree::replace_subtrees_range_0_9() {
+    root = replace_subtrees_range_0_9_rec(root);
+}
+
+Node* BinaryTree::replace_subtrees_range_0_9_rec(Node* node) {
+    if(!node) return nullptr;
+    
+    node->set_left(replace_subtrees_range_0_9_rec(node->get_left()));
+    node->set_right(replace_subtrees_range_0_9_rec(node->get_right()));
+    
+    if(is_op_coded(node->get_value())){
+        int result = evaluate_subtree(node);
+        
+        if(result >= 0 && result <= 9){
+            delete node->get_left();
+            delete node->get_right();
+            node->set_left(nullptr);
+            node->set_right(nullptr);
+            node->set_value(result);
+        }
+    }
+    
+    return node;
 }
