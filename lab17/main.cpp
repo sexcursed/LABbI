@@ -198,16 +198,16 @@ void handle_calctree3() {
     }
     
     if(!tree.is_empty()) {
-        std::cout << "\n=== Исходное дерево (кодированный вывод) ===\n";
-        tree.print_tree_coded();
+        std::cout << "\n=== Исходное дерево ===\n";
+        tree.print_tree_normal();
         
         std::cout << "\n=== Результат вычислений ===\n";
         int result = tree.evaluate_subtree(tree.get_root());
         std::cout << "Значение выражения: " << result << std::endl;
         
-        std::cout << "\n=== После замены умножения (кодированный вывод) ===\n";
+        std::cout << "\n=== После замены умножения ===\n";
         tree.replace_multi(tree.get_root());
-        tree.print_tree_coded();
+        tree.print_tree_normal();
     }
 }
 
@@ -289,12 +289,12 @@ void handle_calctree25() {
     }
     
     if(!tree.is_empty()) {
-        std::cout << "\n=== Исходное дерево (кодированный вывод) ===\n";
-        tree.print_tree_coded();
+        std::cout << "\n=== Исходное дерево ===\n";
+        tree.print_tree_normal();
         
 
         std::ofstream out("FN2.txt");
-        out << "=== Исходное дерево (кодированный вывод) ===\n";
+        out << "=== Исходное дерево ===\n";
         out.close();
         tree.print_sideways("FN2.txt");
         
@@ -318,13 +318,13 @@ void handle_calctree25() {
         
         tree.replace_constants(x_value);
         
-        std::cout << "\n=== Преобразованное дерево (кодированный вывод) ===\n";
-        tree.print_tree_coded();
+        std::cout << "\n=== Преобразованное дерево ===\n";
+        tree.print_tree_normal();
         
 
         std::ofstream out2("FN2.txt", std::ios::app);
         out2 << "\n=== Результат при x = " << x_value << ": " << result << " ===\n";
-        out2 << "\n=== Преобразованное дерево (кодированный вывод) ===\n";
+        out2 << "\n=== Преобразованное дерево ===\n";
         out2.close();
         
         tree.print_sideways("FN2.txt");
