@@ -5,6 +5,7 @@
 #include <stack>
 #include <functional>
 #include <cctype>
+#include <cmath>
 
 bool is_op(std::string c){
     return c == "+" or c == "-" or c == "*" or c == "/" or c == "%";
@@ -516,7 +517,7 @@ void BinaryTree::build_expression_tree() {
 }
 
 bool BinaryTree::is_op_coded(int x) const{
-    return (x >= -5 and x<=-1);
+    return (x >= -6 and x<=-1);
 }
 
 
@@ -535,6 +536,14 @@ int BinaryTree::evaluate_subtree(Node* node){
         case -3: return left_val*right_val;
         case -4: return left_val/right_val;
         case -5: return left_val%right_val;
+        case -6: {
+            int result = 1;
+            if (right_val < 0) return 0;
+            for (int i = 0; i < right_val; ++i) {
+                result *= left_val;
+            }
+            return result;
+        }
         default: return 0;
     }
 }

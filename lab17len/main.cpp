@@ -179,7 +179,7 @@ void handle_calctree7() {
         
         std::cout << "\n=== После замены поддеревьев со значением от 0 до 9 ===\n";
         tree.replace_subtrees_range_0_9();
-        tree.print_tree_coded();
+        tree.print_tree_normal();
         
         std::cout << "\n=== Указатель на корень полученного дерева ===\n";
         std::cout << "Адрес корня: " << tree.get_root() << std::endl;
@@ -284,7 +284,7 @@ void handle_calctree25() {
         tree.print_tree_coded();
         
         std::ofstream out("FN2.txt");
-        out << "=== Исходное дерево (кодированный вывод) ===\n";
+        out << "=== Исходное дерево ===\n";
         out.close();
         tree.print_sideways("FN2.txt");
         
@@ -308,12 +308,12 @@ void handle_calctree25() {
         
         tree.replace_constants(x_value);
         
-        std::cout << "\n=== Преобразованное дерево (кодированный вывод) ===\n";
-        tree.print_tree_coded();
+        std::cout << "\n=== Преобразованное дерево ===\n";
+        tree.print_tree_normal();
         
         std::ofstream out2("FN2.txt", std::ios::app);
         out2 << "\n=== Результат при x = " << x_value << ": " << result << " ===\n";
-        out2 << "\n=== Преобразованное дерево (кодированный вывод) ===\n";
+        out2 << "\n=== Преобразованное дерево ===\n";
         out2.close();
         
         tree.print_sideways("FN2.txt");
