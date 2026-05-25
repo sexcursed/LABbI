@@ -1,11 +1,8 @@
-// main.cpp
 #include "binary_tree.h"
 #include <iostream>
-#include <cstdlib>
-#include <ctime>
 #include <limits>
 #include <fstream>
-#include <string>
+#include <vector>
 
 void clear_input_buffer() {
     std::cin.clear();
@@ -19,6 +16,19 @@ bool get_int_input(int& value) {
         std::cout << "Ошибка: введите целое число!\n";
         return false;
     }
+    return true;
+}
+
+bool get_range_input(int& min_val, int& max_val) {
+    std::cout << "Введите минимальное и максимальное значение через пробел: ";
+    if (!get_int_input(min_val)) return false;
+    if (!get_int_input(max_val)) return false;
+    
+    if (min_val >= max_val) {
+        std::cout << "Ошибка: минимальное значение должно быть меньше максимального!\n";
+        return false;
+    }
+    
     return true;
 }
 
@@ -39,9 +49,8 @@ void print_menu() {
     std::cout << "        ЛАБОРАТОРНАЯ РАБОТА №18\n";
     std::cout << "             ВАРИАНТ 3\n";
     std::cout << "========================================\n";
-    std::cout << "1. TreeFun1 - Преобразование в список\n";
+    std::cout << "1. TreeFun1 - Преобразование BST в список\n";
     std::cout << "2. TreeFun5 - Итератор (лево-право-корень)\n";
-    std::cout << "3. TreeFun13 - Удаление дубликатов поддеревьев\n";
     std::cout << "0. Выход\n";
     std::cout << "========================================\n";
     std::cout << "Выберите задачу: ";
@@ -90,7 +99,7 @@ bool read_numbers_from_file(const std::string& filename, std::vector<int>& numbe
     return true;
 }
 
-void fill_tree_from_file(BinaryTree& tree) {
+void fill_tree_from_file_bst(BinaryTree& tree) {
     std::string filename;
     std::cout << "Введите имя файла: ";
     std::cin >> filename;
@@ -102,152 +111,119 @@ void fill_tree_from_file(BinaryTree& tree) {
     
     tree.clear();
     for (int num : numbers) {
-        tree.insert(num);
+        tree.insert_bst(num);
+    }
+    
+    std::cout << "Загружено " << numbers.size() << " чисел из файла\n";
+}
+
+void fill_tree_from_file_random(BinaryTree& tree) {
+    std::string filename;
+    std::cout << "Введите имя файла: ";
+    std::cin >> filename;
+    
+    std::vector<int> numbers;
+    if (!read_numbers_from_file(filename, numbers)) {
+        return;
+    }
+    
+    tree.clear();
+    for (int num : numbers) {
+        tree.insert_random(num);
     }
     
     std::cout << "Загружено " << numbers.size() << " чисел из файла\n";
 }
 
 void handle_treefun1() {
-    std::cout << "\n=== TreeFun1: Преобразование дерева в двусвязный список ===\n";
+    std::cout << "\n=== TreeFun1: Преобразование дерева поиска (BST) в двусвязный список ===\n";
     
     BinaryTree tree;
     int choice, N;
     
     while (true) {
         print_input_menu();
-        if (!get_menu_choice(choice, 1, 3)) {
-            continue;
-        }
+        if (!get_menu_choice(choice, 1, 3)) continue;
         break;
     }
     
     if (choice == 1) {
-        if (!get_positive_number(N, "Введите количество узлов: ")) {
-            return;
-        }
-        std::cout << "Введите " << N << " чисел: ";
-        tree.fill_manual(N);
+        if (!get_positive_number(N, "Введите количество узлов: ")) return;
+        std::cout << "Введите " << N << " чисел для BST: ";
+        tree.fill_manual_bst(N);
     } else if (choice == 2) {
-        if (!get_positive_number(N, "Введите количество узлов: ")) {
-            return;
+        if (!get_positive_number(N, "Введите количество узлов: ")) return;
+        
+        int min_val, max_val;
+        while (true) {
+            if (!get_range_input(min_val, max_val)) continue;
+            break;
         }
-        tree.fill_random(N, 1, 100);
+        
+        tree.clear();
+        for (int i = 0; i < N; ++i) {
+            int data = min_val + std::rand() % (max_val - min_val + 1);
+            tree.insert_bst(data);
+        }
+        std::cout << "Сгенерировано " << N << " случайных чисел для BST в диапазоне [" 
+                  << min_val << ", " << max_val << "]\n";
     } else {
-        fill_tree_from_file(tree);
-        if (tree.is_empty()) {
-            return;
-        }
+        fill_tree_from_file_bst(tree);
+        if (tree.is_empty()) return;
     }
     
-    std::cout << "\nИсходное дерево:\n";
+    std::cout << "\nИсходное дерево поиска (BST):\n";
     tree.print_tree();
     
-    Node* head = tree.convert_to_doubly_linked_list();
+    tree.convert_to_doubly_linked_list_inplace();
     
-    std::cout << "\nПолученный двусвязный список:\n";
-    tree.print_doubly_linked_list(head);
-    
-    BinaryTree new_tree;
-    new_tree.convert_from_doubly_linked_list(head);
-    
-    std::cout << "\nВосстановленное дерево из списка:\n";
-    new_tree.print_tree();
-    
-    Node* new_head = new_tree.convert_to_doubly_linked_list();
-    std::cout << "\nПроверка - список из восстановленного дерева:\n";
-    new_tree.print_doubly_linked_list(new_head);
+    std::cout << "\nПолученный двусвязный список (в порядке возрастания):\n";
+    tree.print_as_list();
 }
 
 void handle_treefun5() {
-    std::cout << "\n=== TreeFun5: Итератор (лево-право-корень) ===\n";
+    std::cout << "\n=== TreeFun5: Итератор пост-обхода (лево-право-корень) для обычного дерева ===\n";
     
     BinaryTree tree;
     int choice, N;
     
     while (true) {
         print_input_menu();
-        if (!get_menu_choice(choice, 1, 3)) {
-            continue;
-        }
+        if (!get_menu_choice(choice, 1, 3)) continue;
         break;
     }
     
     if (choice == 1) {
-        if (!get_positive_number(N, "Введите количество узлов: ")) {
-            return;
-        }
+        if (!get_positive_number(N, "Введите количество узлов: ")) return;
         std::cout << "Введите " << N << " чисел: ";
-        tree.fill_manual(N);
+        tree.fill_manual_random(N);
     } else if (choice == 2) {
-        if (!get_positive_number(N, "Введите количество узлов: ")) {
-            return;
+        if (!get_positive_number(N, "Введите количество узлов: ")) return;
+        
+        int min_val, max_val;
+        while (true) {
+            if (!get_range_input(min_val, max_val)) continue;
+            break;
         }
-        tree.fill_random(N, 1, 100);
+        
+        tree.fill_random(N, min_val, max_val);
+        std::cout << "Сгенерировано " << N << " случайных чисел для обычного дерева в диапазоне ["
+                  << min_val << ", " << max_val << "]\n";
     } else {
-        fill_tree_from_file(tree);
-        if (tree.is_empty()) {
-            return;
-        }
+        fill_tree_from_file_random(tree);
+        if (tree.is_empty()) return;
     }
     
-    std::cout << "\nДерево:\n";
+    std::cout << "\nОбычное дерево:\n";
     tree.print_tree();
     
     std::cout << "\nОбход в порядке (лево-право-корень):\n";
     BinaryTree::PostorderIterator it = tree.get_postorder_iterator();
+    
     while (it.has_next()) {
         std::cout << it.next() << " ";
     }
     std::cout << std::endl;
-}
-
-void handle_treefun13() {
-    std::cout << "\n=== TreeFun13: Удаление дублирующихся поддеревьев ===\n";
-    std::cout << "Для проверки создайте дерево с повторяющимися поддеревьями.\n";
-    
-    BinaryTree tree;
-    int choice, N;
-    
-    while (true) {
-        print_input_menu();
-        if (!get_menu_choice(choice, 1, 3)) {
-            continue;
-        }
-        break;
-    }
-    
-    if (choice == 1) {
-        if (!get_positive_number(N, "Введите количество узлов: ")) {
-            return;
-        }
-        std::cout << "Введите " << N << " чисел: ";
-        tree.fill_manual(N);
-    } else if (choice == 2) {
-        if (!get_positive_number(N, "Введите количество узлов: ")) {
-            return;
-        }
-        std::cout << "Генерация случайных чисел от 1 до 10 для создания возможных дубликатов\n";
-        tree.fill_random(N, 1, 10);
-    } else {
-        fill_tree_from_file(tree);
-        if (tree.is_empty()) {
-            return;
-        }
-    }
-    
-    std::cout << "\nИсходное дерево:\n";
-    tree.print_tree();
-    
-    std::cout << "\nЗапуск удаления дублирующихся поддеревьев...\n";
-    tree.remove_duplicate_subtrees();
-    
-    std::cout << "\nДерево после удаления дублирующихся поддеревьев:\n";
-    if (tree.is_empty()) {
-        std::cout << "Дерево пусто\n";
-    } else {
-        tree.print_tree();
-    }
 }
 
 int main() {
@@ -258,7 +234,7 @@ int main() {
     do {
         print_menu();
         
-        if (!get_menu_choice(choice, 0, 3)) {
+        if (!get_menu_choice(choice, 0, 2)) {
             continue;
         }
         
@@ -268,9 +244,6 @@ int main() {
                 break;
             case 2:
                 handle_treefun5();
-                break;
-            case 3:
-                handle_treefun13();
                 break;
             case 0:
                 std::cout << "Завершение программы...\n";
